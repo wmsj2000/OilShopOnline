@@ -26,7 +26,7 @@ public class OrdersDao {
 
 	public double getTotalMoney() {
 		try{
-			String sql = "select sum(orders.order_number*oil_price) from oil,orders where orders.oil_id=oil.oil_id;";
+			String sql = "select sum(orders.order_number*oil.oil_price) from oil,orders where orders.oil_id=oil.oil_id;";
 			QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
 			return (double) runner.query(sql, new ScalarHandler());
 

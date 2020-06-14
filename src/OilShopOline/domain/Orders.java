@@ -3,6 +3,7 @@ package OilShopOline.domain;
 public class Orders {
 	private int order_id;
 	private String customer_name;
+	private String order_abnormal_info;
 	private int oil_id;
 	private java.sql.Date order_date;
 	private java.sql.Time order_time;
@@ -42,5 +43,11 @@ public class Orders {
 	}
 	public void setOil_id(int oil_id) {
 		this.oil_id = oil_id;
+	}
+	public String getOrder_abnormal_info() {
+		return order_abnormal_info;
+	}
+	public void setOrder_abnormal_info(String order_abnormal_info) {
+		this.order_abnormal_info = order_abnormal_info;
 	}
 }

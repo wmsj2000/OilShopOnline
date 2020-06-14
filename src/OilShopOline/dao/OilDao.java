@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.ArrayHandler;
-import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import OilShopOline.domain.Oil;
 import OilShopOline.domain.Orders;
 import OilShopOline.utils.DataSourceUtils;
+
+
 
 
 public class OilDao {
@@ -39,10 +39,11 @@ public class OilDao {
 		try{
 			double capacity=Double.parseDouble(oil_capacity);
 			double price=Double.parseDouble(oil_price);
-			String sql = "select isnull((select top(1) 1 from oil where oil_brand=? and oil_category=? and oil_craft=? and oil_rank=? and oil_capacity=? and oil_price=?), 0)";
+			String sql = "select ifnull((select  1  from oil where oil_brand=? and oil_category=? and oil_craft=? and oil_rank=? and oil_capacity=? and oil_price=? limit 1), 0)";
 			QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
-			int t = (int) runner.query(sql, new ScalarHandler(),oil_brand,oil_category,oil_craft,oil_rank,capacity,price);
-			return t;
+			long t = (long) runner.query(sql, new ScalarHandler(),oil_brand,oil_category,oil_craft,oil_rank,capacity,price);
+			if(t==1) {return 1;}
+			return 0;
 		}catch(SQLException e){
 				e.printStackTrace();
 				throw new RuntimeException("AddOil dao ß∞‹");
@@ -157,10 +158,11 @@ public class OilDao {
 			double price=Double.parseDouble(oil_price);
 			int number=Integer.parseInt(oil_number);
 			int id=Integer.parseInt(oil_id);
+			boolean state = Boolean.parseBoolean(oil_state);
 			String sql = "update oil set oil_brand=?,oil_category=?,oil_craft=?,oil_rank=?,oil_capacity=?,oil_price=?,oil_number=?,oil_state=? where oil_id=?";
 			QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
 			runner.update(sql, oil_brand,oil_category, oil_craft, oil_rank,
-					 capacity,price,number, oil_state,id);
+					 capacity,price,number, state,id);
 
 		}catch(SQLException e){
 				e.printStackTrace();
@@ -263,7 +265,41 @@ public class OilDao {
 				throw new RuntimeException("getTotalMoney dao ß∞‹");
 		}
 	}
-	
 
+	public List<Oil> findOilBySeller(String seller_name) {
+		try{
+			String sql = "select seller_brand from seller where seller_name=?";
+			String sql2 = "select * from oil where oil.oil_brand=? order by oil.oil_id";
+			QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
+			String brand = (String) runner.query(sql,new ScalarHandler(),seller_name);
+			return runner.query(sql2, new BeanListHandler<Oil>(Oil.class),brand);
+
+		}catch(SQLException e){
+				e.printStackTrace();
+				throw new RuntimeException("findOilBySeller dao ß∞‹");
+		}
+	}
+
+	public List<Oil> recommend(String customer_name) {
+		try{
+			String sql0 = "select similar_customer_name from similarity where customer_name=?";
+			String sql = "select oil.oil_id,oil.oil_brand,oil_category,oil_craft,oil_rank,oil_capacity,oil_price,oil_number,oil_state"
+					+ " from oil left join orders on orders.oil_id=oil.oil_id "
+					+ "where orders.customer_name=? order by orders.order_date,orders.order_date limit 10";
+			QueryRunner runner = new QueryRunner(DataSourceUtils.getDataSource());
+			String name=(String) runner.query(sql0, new ScalarHandler(),customer_name);
+			if(name.length()>0) {
+				return runner.query(sql, new BeanListHandler<Oil>(Oil.class),name);
+			}
+			else return null;
+
+		}catch(SQLException e){
+				e.printStackTrace();
+				throw new RuntimeException("recommend dao ß∞‹");
+		}
+	}
+
+	
+	
 
 }

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/Css/Login.css" />
@@ -27,7 +26,17 @@
 				</tr>
 				<tr>
 					<td>
-						<p><a href="${pageContext.request.contextPath}/LogRegister/Login.jsp" class="backto_login">返回用户登录 </a></p>
+						<p><a href="${pageContext.request.contextPath}/LogRegister/Login.jsp" class="backto_login">用户登录 </a></p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p><a href="${pageContext.request.contextPath}/LogRegister/SellerLogin.jsp" class="to_sellerlogin">销售员登录 </a></p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p><a href="${pageContext.request.contextPath}/NoLoginServlet" class="to_nologin">游客登录 </a></p>
 					</td>
 				</tr>
 			</table>

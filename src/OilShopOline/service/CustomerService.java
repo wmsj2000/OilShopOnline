@@ -70,9 +70,10 @@ public class CustomerService {
 			throw new Exception("addToCart ß∞‹");
 		}
 	}
-	public void buyoil(String date, String time, String customer_name, String oil_id, String buy_number) throws Exception {
+	public void buyoil(String date, String time, String customer_name, String oil_id, String buy_number, String ip) throws Exception {
 		try {
-			 dao.buyoil( date,  time,  customer_name,  oil_id,buy_number);
+			 dao.buyoil( date,  time,  customer_name,  oil_id,buy_number,ip);
+			 dao.GetPortrait();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

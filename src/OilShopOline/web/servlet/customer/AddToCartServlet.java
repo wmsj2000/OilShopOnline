@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+
 import OilShopOline.service.CustomerService;
 
 /**
@@ -36,7 +39,10 @@ public class AddToCartServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String customer_name=(String) request.getSession().getAttribute("customer_name");
+		String browse_start_date=(String) request.getSession().getAttribute("browse_start_date");
+		String browse_start_time=(String) request.getSession().getAttribute("browse_start_time");
 		String oil_id = request.getParameter("oil_id");
+		int id = Integer.parseInt(oil_id);
 		CustomerService service = new CustomerService();
 		LocalDate Date = LocalDate.now(); 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
@@ -46,6 +52,14 @@ public class AddToCartServlet extends HttpServlet {
 		String time=Time.format(formatter2); 
 		int t;
 		try {
+			MDC.put("browse_start_date",browse_start_date);
+			MDC.put("browse_start_time",browse_start_time);
+			MDC.put("browse_end_date",date);
+			MDC.put("browse_end_time",time);
+			MDC.put("customer_name",customer_name);
+			MDC.put("oil_id",id);
+			Logger logger = Logger.getLogger("browse_log");
+			logger.info("");
 			t = service.checkCart(customer_name,oil_id);
 			if(t==1) {
 				request.getRequestDispatcher("/CustomerFindAllOilServlet").forward(request, response);
