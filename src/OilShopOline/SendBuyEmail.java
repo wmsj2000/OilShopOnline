@@ -10,8 +10,8 @@ import javax.mail.internet.MimeMessage;
 
 public class SendBuyEmail {
 	//发件人的邮箱和授权码
-		private final String myEmailAccount = "3271418625@qq.com";//发送的邮箱
-		private final String myEmailPassword = "kddjmitmpdssdagd";
+		private final String myEmailAccount = "";//发送的邮箱
+		private final String myEmailPassword = "";
 		private String receiveMailAccount = null ;
 		private String info=null;
 		// 信息内容
